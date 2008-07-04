@@ -2,6 +2,12 @@
 #include "XSUB.h"
 #include "perl.h"
 #include "embed.h"
+#include "ppport.h"
+
+#ifndef SvPAD_TYPED
+#define SvPAD_TYPED(sv) \
+	(SvFLAGS(sv) & SVpad_TYPED)
+#endif
 
 STATIC OP *(*mcn_orig_check)(pTHX_ OP *op) = NULL;
 

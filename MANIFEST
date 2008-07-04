@@ -1,8 +1,10 @@
+Changes
 CheckNames.xs
 lib/Methods/CheckNames.pm
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
+ppport.h
 t/foo.t
 META.yml                                 Module meta-data (added by MakeMaker)
 SIGNATURE                                Public-key signature (added by MakeMaker)
