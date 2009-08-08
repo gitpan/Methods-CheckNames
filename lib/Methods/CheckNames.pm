@@ -3,10 +3,13 @@
 package Methods::CheckNames;
 
 use strict;
+use warnings;
+use B::Hooks::OP::Check;
+use B::Hooks::OP::PPAddr;
+use B::Hooks::EndOfScope;
+use namespace::clean;
 
-use vars qw($VERSION @ISA);
-
-$VERSION = "0.04";
+our $VERSION = "0.05_01";
 
 eval {
 	require XSLoader;
@@ -14,9 +17,22 @@ eval {
 	1;
 } or do {
 	require DynaLoader;
-	push @ISA, 'DynaLoader';
+	push our @ISA, 'DynaLoader';
 	__PACKAGE__->bootstrap($VERSION);
 };
+
+sub import {
+    my ($class) = @_;
+    my $caller = caller;
+
+    my $hook = $class->setup;
+
+    on_scope_end {
+        $class->teardown($hook);
+    };
+
+    return;
+}
 
 __PACKAGE__
 
@@ -52,18 +68,12 @@ Use the C<can> meta method instead of C<gv_fetchmethod>
 
 Make the checking pluggable
 
-=item *
-
-Checking should be lexically scoped. Not a huge issue for now, since C<my Foo
-$var> is not commonly used.
-
 =back
 
 =head1 VERSION CONTROL
 
-This module is maintained using Darcs. You can get the latest version from
-L<http://nothingmuch.woobling.org/code>, and use C<darcs send> to commit
-changes.
+This module is maintained using git. You can get the latest version from
+L<git://github.com/rafl/methods-checknames.git>.
 
 =head1 AUTHOR
 
